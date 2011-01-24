@@ -1,0 +1,130 @@
+<html>
+  <head>
+    <style>
+      html, body, header, footer, section, ul, li {
+        margin: 0;
+        padding: 0;
+      }
+      html, body {
+        height: 100%;
+        position: relative;
+      }
+      header, footer {
+        background-color: #eee;
+        height: 50px;
+        width: 100%;
+        position: absolute;
+        left: 0px;
+      }
+      header {
+        top: 0px;
+      }
+      footer {
+        bottom: 0px;
+      }
+      footer input {
+        width: 100%;
+        height: 100%;
+      }
+      li {
+        list-style-type: none;
+      }
+      #content {
+        position: absolute;
+        top: 50px;
+        bottom: 50px;
+        width: 100%;
+        background-color: #444;
+      }
+      #nicklist {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100px;
+        padding: 50px 0px;
+        height: 100%;
+        background-color: #fff;
+      }
+      #chatlog {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        background-color: #444;
+        color: #eee;
+        height: 100%;
+        width: 100%;
+        padding: 60px 0px 60px 110px;
+      }
+      #chatinput {
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <textarea id="chatlog" disabled="disabled">
+      </textarea>
+      <ul id="nicklist">
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+      </ul>
+    </section>
+    <header>
+      Ottawa Hackathon
+    </header>
+    <footer>
+      <input autofocus="autofocus" type="text" id="chatinput" placeholder="Enter message ..."/>
+    </footer>
+    <script>
+      var chatlog = document.getElementById('chatlog');
+      var nicklist = document.getElementById('nicklist');
+      var chatinput = document.getElementById('chatinput');
+      chatinput.onkeypress = onInputKeyPress;
+      
+      var ws = new WebSocket("ws://mohamedmansour.com:8080/");
+      ws.onopen = onConnectionOpen;
+      ws.onclose = onServerClose;
+      ws.onerror = onServerError;
+      ws.onmessage = onMessage;
+      
+      function appendNick(msg) {
+        var item = document.createElement('li');
+        item.innerHTML = msg;
+        chatlog.appendChild(item);
+      }
+      
+      function appendChat(msg) {
+        chatlog.innerHTML += '\n' + msg;
+      }
+      
+      function onInputKeyPress(e) {
+        var key = e.keyCode || e.which;
+        if (key == 13) {
+          ws.send(chatinput.value);
+          chatinput.value = '';
+        }
+      }
+      
+      function onConnectionOpen() {
+        ws.send('Hello!'); // Send the message 'Ping' to the server
+      }
+      
+      function onServerClose() {
+        appendChat('Disconnected from server');
+      }
+      
+      function onServerError(error) {
+        appendChat('Error ' + error);
+      }
+      
+      function onMessage(e) {
+        appendChat(e.data);
+      }
+      
+    </script>
+  </body>
+  
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "Ottawa Google Hackathon",
+  "version": "0.1",
+  "description": "HTML5 Chrome Google Hackathon extension.",
+  "permissions": [
+   "tabs",
+   "notifications",
+   "http://mohamedmansour.com:8080/*"
+  ],
+  "background_page": "background.html",
+  "browser_action": {
+   "default_icon": "online.png"
+  }
+}
