@@ -1,7 +1,7 @@
 {
-  "name": "Ottawa Google Hackathon",
+  "name": "Google Chrome Hackathon Client",
   "version": "0.1",
-  "description": "HTML5 Chrome Google Hackathon extension.",
+  "description": "HTML5 Google Chrome Hackathon Client Extension.",
   "permissions": [
    "tabs",
    "notifications",
@@ -9,6 +9,6 @@
   ],
   "background_page": "background.html",
   "browser_action": {
-   "default_icon": "online.png"
+   "default_icon": "/img/online.png"
   }
 }

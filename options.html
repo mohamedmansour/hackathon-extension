@@ -1,0 +1,51 @@
+<!DOCTYPE html> 
+<html>
+<head>
+  <title>Google Chrome Hackathon Client</title>
+  <link rel="stylesheet" type="text/css" href="/css/options.css">
+  <script type="text/javascript" src="/js/functions.js"></script>
+  <script type="text/javascript" src="/js/options.js"></script>
+</head>
+<body> 
+  <form onsubmit="return false;">
+  <div id="body-container">
+    <div id="header">
+      <h1>Google Chrome Hackathon Client <em id="version"></em></h1>
+    </div>
+    <p>
+      Make sure you save the settings after your done editing!
+      <a
+       href="http://groups.google.com/group/mohamedmansour-extensions">
+       File bugs and suggestions
+      </a>
+    </p>
+    <div class="extension-template">
+      <div class="extension-header">Proxy Server</div>
+      <div class="extension-options">
+        <p>This must be a valid websocket server following protocol 76 standards.</p>
+        <dl>
+          <dt>Websocket URL:</dt>
+          <dd>
+            <label for="websocket"><input type="text" id="websocket" /></label>
+          </dd>
+          <dt>Nick:</dt>
+          <dd>
+            <label for="nick"><input type="text" id="nick" /></label>
+          </dd>
+        </dl>
+      </div>
+    </div>
+    <div id="extension-footer">
+      <span id="info-message">Options saved!</span>
+      <button id="button-save">Save</button>
+      <button id="button-close">Close</button>
+    </div>
+    <div id="credits">
+      Extension developed by <a href="http://www.mohamedmansour.com">Mohamed Mansour</a>, 
+      Source Code available in <a href="http://github.com/mohamedmansour/hackathon-extension">GitHub</a><br/>
+      Follow me on Twitter <a href="http://twitter.com/mohamedmansour">@mohamedmansour</a>
+    </div>
+  </div>
+  </form>
+</body>
+</html>

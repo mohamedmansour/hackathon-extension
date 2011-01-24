@@ -1,26 +1,7 @@
 <!DOCTYPE html> 
 <html> 
-  <head>  
-  <script>
-    /**
-     * Open a singleton page, which means, if a page already exists, it just selects it.
-     * @param url The page which it will navigate to.
-     */
-    function openSingletonPage(url) {
-      var views = chrome.extension.getViews();
-      for (var v in views) {
-        var view = views[v];
-        if (view.location.href.indexOf(url) == 0) {
-          view.focus();
-          return;
-        }
-      }
-      chrome.tabs.create({url: url});
-    }
-    
-    chrome.browserAction.onClicked.addListener(function(tab) {
-      openSingletonPage(chrome.extension.getURL('chat.html'));
-    });
-  </script> 
-  </head> 
+  <script type="text/javascript" src="/js/functions.js"></script>
+  <script type="text/javascript" src="/js/settings.js"></script>
+  <script type="text/javascript" src="/js/notification_client.js"></script>
+  <script type="text/javascript" src="/js/background.js"></script>
 </html> 
