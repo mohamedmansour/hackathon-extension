@@ -10,8 +10,9 @@ function $(id) {
  * Opens a singleton URL. Only one instance of that url is ever opened at
  * any time.
  * @param {string} url The url.
+ * @param {function} callback When the page has been created.
  */
-function openSingletonPage(url) {
+function openSingletonPage(url, callback) {
   var views = chrome.extension.getViews();
   for (var v in views) {
     var view = views[v];
@@ -20,7 +21,7 @@ function openSingletonPage(url) {
       return;
     }
   }
-  chrome.tabs.create({url: url});
+  chrome.tabs.create({url: url}, callback);
 }
 
 /**

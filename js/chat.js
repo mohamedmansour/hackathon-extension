@@ -13,22 +13,23 @@ function onLoad(e) {
   chatinput = document.getElementById('chatinput');
   chatinput.onkeypress = onInputKeyPress;
   chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-    console.log(request);
-    switch (request.method) {
-      case 'MessageReceived':
-        onMessageReceived(request.data);
+    switch (request.command) {
+      case NotificationCommand.MSG:
+        if (request.protocol == NotificationProtocol.CHAT) {
+          onMessageReceived(request.message);
+        }
         break;
-      case 'NicklistReceived':
-        onNicklistReceived(request.data);
+      case NotificationCommand.NICKLIST:
+        onNicklistReceived(request.message);
         break;
-      case 'UserJoined':
-        onUserJoined(request.data);
+      case NotificationCommand.JOIN:
+        onUserJoined(request.message);
         break;
-      case 'UserParted':
-        onUserParted(request.data);
+      case NotificationCommand.PART:
+        onUserParted(request.message);
         break;
-      case 'ErrorReceived':
-        onError(request.data);
+      case NotificationCommand.ERROR:
+        onError(request.message);
       default:
         break;
     }
@@ -57,22 +58,22 @@ function onMessageReceived(msg) {
 /**
  * Fired when user has joined.
  */
-function onUserJoined(nick) {
-  addNick(nick.id, nick.name);
+function onUserJoined(user) {
+  addNick(user.id, user.nick);
 }
 
 /**
  * Fired when user has parted.
  */
-function onUserParted(nick) {
-  removeNick(nick.id);
+function onUserParted(user) {
+  removeNick(user.id);
 }
 
 /**
  * Fired when error has occurred.
  */
 function onError(error) {
-  alert(error);
+  onMessageReceived('ERROR: ' + error);
 }
 
 /**
@@ -80,8 +81,8 @@ function onError(error) {
  */
 function onNicklistReceived(nicklist) {
   for (var i in nicklist) {
-    var nick = nicklist[i];
-    addNick(nick.id, nick.name);
+    var user = nicklist[i];
+    addNick(i, user.nick);
   }
 }
 
@@ -99,8 +100,14 @@ function removeNick(id) {
  * Adds Nick to the userlist.
  */
 function addNick(id, nick) {
-  var item = document.createElement('li');
-  item.innerHTML = nick;
-  item.setAttribute('id', id);
-  nicklist.appendChild(item);
+  var existsItem = document.getElementById(id);
+  if (existsItem) {
+    existsItem.innerHTML = nick;
+  }
+  else {
+    var item = document.createElement('li');
+    item.innerHTML = nick;
+    item.setAttribute('id', id);
+    nicklist.appendChild(item);
+  }
 }

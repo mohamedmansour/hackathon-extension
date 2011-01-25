@@ -20,7 +20,7 @@ if (currVersion != prevVersion) {
 
 // On browser action clicked!
 chrome.browserAction.onClicked.addListener(function(tab) {
-  openSingletonPage(chrome.extension.getURL('chat.html'));
+  notificationClient.openChatWindow();
 });
 
 // Start the connection to the server.

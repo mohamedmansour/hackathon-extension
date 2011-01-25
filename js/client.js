@@ -1,14 +1,4 @@
 /**
- * Notification communication that gets sent through the wire.
- * @enum {number}
- */
-NotificationProtocol = {
-  CHAT     : 0, /* Notifies the users log */
-  NOTIFY   : 1, /* Notifies WebKit Notifications */
-  INFO     : 2, /* Notifies Chrome Extension Infobar */
-};
-
-/**
  * Instantiates a connection to the websocket address.
  */
 NotificationClient = function(address) {
@@ -29,9 +19,10 @@ NotificationClient.prototype.start = function() {
  * Fired when Websocket has successfully opened.
  */
 NotificationClient.prototype.onConnectionOpen_ = function() {
+  console.log('new nick: ' + settings.nick);
   this.ws_.send(JSON.stringify({
-    command: 'NICK',
-    data: settings.nick
+    command: NotificationCommand.NICK,
+    message: settings.nick
   }));
 };
 
@@ -40,9 +31,16 @@ NotificationClient.prototype.onConnectionOpen_ = function() {
  */
 NotificationClient.prototype.onServerClose_ = function() {
   chrome.extension.sendRequest({
-    method: 'ErrorReceived',
-    data: 'Server has disconnected.'
+    command: NotificationCommand.ERROR,
+    message: 'Server has disconnected.'
   });
+  
+  var notification = webkitNotifications.createNotification(
+    '/img/online.png',
+    'Hackathon',
+    'Server has disconnected.'
+  );
+  notification.show();
 };
 
 /**
@@ -50,8 +48,8 @@ NotificationClient.prototype.onServerClose_ = function() {
  */
 NotificationClient.prototype.onServerError_ = function(error) {
   chrome.extension.sendRequest({
-    method: 'ErrorReceived',
-    data: error
+    command: NotificationCommand.ERROR,
+    message: error
   });
 };
 
@@ -61,13 +59,8 @@ NotificationClient.prototype.onServerError_ = function(error) {
 NotificationClient.prototype.onMessage_ = function(e) {
   console.log(e.data);
   var obj = JSON.parse(e.data);
+  
   switch (obj.protocol) {
-    case NotificationProtocol.CHAT:
-      chrome.extension.sendRequest({
-        method: 'MessageReceived',
-        data: obj.message
-      });
-      break;
     case NotificationProtocol.NOTIFY:
       var notification = webkitNotifications.createNotification(
         '/img/online.png',
@@ -82,6 +75,9 @@ NotificationClient.prototype.onMessage_ = function(e) {
     default:
       break;
   }
+
+  // Send that message to the listeners.
+  chrome.extension.sendRequest(obj);
 };
 
 /**
@@ -89,4 +85,18 @@ NotificationClient.prototype.onMessage_ = function(e) {
  */
 NotificationClient.prototype.isActive = function() {
   return this.ws_.readyState == 1;
+};
+
+/**
+ * Opens a chatting window.
+ */
+NotificationClient.prototype.openChatWindow = function() {
+  openSingletonPage(chrome.extension.getURL('chat.html'), (function(tab) {
+    console.log('sending');
+    // Send a message to the server to get all the active users.
+    this.ws_.send(JSON.stringify({
+      command: NotificationCommand.NICKLIST,
+      message: null
+    }));
+  }).bind(this));
 };
