@@ -91,12 +91,9 @@ NotificationClient.prototype.isActive = function() {
  * Opens a chatting window.
  */
 NotificationClient.prototype.openChatWindow = function() {
-  openSingletonPage(chrome.extension.getURL('chat.html'), (function(tab) {
-    console.log('sending');
-    // Send a message to the server to get all the active users.
-    this.ws_.send(JSON.stringify({
-      command: NotificationCommand.NICKLIST,
-      message: null
-    }));
-  }).bind(this));
+  openSingletonPage(chrome.extension.getURL('chat.html'));
+};
+
+NotificationClient.prototype.getSocket = function() {
+  return this.ws_;
 };

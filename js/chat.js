@@ -35,6 +35,14 @@ function onLoad(e) {
     }
     sendResponse({});
   });
+  
+  // Send a message to the server asking it to retrieve the nick list.
+  var notify = chrome.extension.getBackgroundPage().notificationClient;
+  notify.getSocket().send(
+    JSON.stringify({
+      command: NotificationCommand.NICKLIST
+    })
+  );
 }
 
 /**
