@@ -94,6 +94,6 @@ NotificationClient.prototype.openChatWindow = function() {
   openSingletonPage(chrome.extension.getURL('chat.html'));
 };
 
-NotificationClient.prototype.getSocket = function() {
-  return this.ws_;
+NotificationClient.prototype.send = function(obj) {
+  return this.ws_.send(obj);
 };

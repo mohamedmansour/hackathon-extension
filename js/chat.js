@@ -1,6 +1,8 @@
+var client_id = null;
 var chatlog = null;
 var nicklist = null;
 var chatinput = null;
+var notify = chrome.extension.getBackgroundPage().notificationClient;
 
 window.addEventListener('load', onLoad, false);
 
@@ -37,12 +39,33 @@ function onLoad(e) {
   });
   
   // Send a message to the server asking it to retrieve the nick list.
-  var notify = chrome.extension.getBackgroundPage().notificationClient;
-  notify.getSocket().send(
-    JSON.stringify({
-      command: NotificationCommand.NICKLIST
-    })
-  );
+  notify.send(JSON.stringify({
+    command: NotificationCommand.NICKLIST
+  }));
+}
+
+/**
+ * @param {object} msg The message obj.
+ * @returns {string} formatted message.
+ */
+function format(msg) {
+  var date = new Date();
+  return '<span class="time">' +
+            twoDigitsFormat(date.getHours()) + ':' +
+            twoDigitsFormat(date.getMinutes()) + ':' +
+            twoDigitsFormat(date.getSeconds()) + 
+          '</span> ' +
+          '<span class="separation">&lt;</span> ' +
+          '<span class="nick">' + msg.nick + '</span> ' +
+          '<span class="separation">&gt;</span> ' + 
+          '<span class="message">' + msg.message + '</span>';
+}
+
+/**
+ * Add a leading 0 if necessary.
+ */
+function twoDigitsFormat(num) {
+  return (num <10) ? '0'+ num : num;
 }
 
 /**
@@ -51,7 +74,10 @@ function onLoad(e) {
 function onInputKeyPress(e) {
   var key = e.keyCode || e.which;
   if (key == 13) {
-    ws.send(chatinput.value);
+    notify.send(JSON.stringify({
+      command: NotificationCommand.MSG,
+      message: chatinput.value
+    }));
     chatinput.value = '';
   }
 }
@@ -60,7 +86,13 @@ function onInputKeyPress(e) {
  * Fires when message has been received.
  */
 function onMessageReceived(msg) {
-  chatlog.innerHTML += '\n' + msg;
+  var mine = client_id == msg.id;
+  var item = document.createElement('li');
+  if (mine) {
+    item.setAttribute('class', 'mine');
+  }
+  item.innerHTML = format(msg);
+  chatlog.appendChild(item);
 }
 
 /**
@@ -88,9 +120,10 @@ function onError(error) {
  * Fired when nicklist has been recieved.
  */
 function onNicklistReceived(nicklist) {
-  for (var i in nicklist) {
-    var user = nicklist[i];
-    addNick(i, user.nick);
+  client_id = nicklist.id;
+  var users = nicklist.users;
+  for (var i in users) {
+    addNick(i, users[i].nick);
   }
 }
 

@@ -46,12 +46,21 @@ li {
   position: absolute;
   top: 0px;
   left: 0px;
-  background-color: #444;
+  background-color: #000;
   color: #eee;
   height: 100%;
   width: 100%;
   padding: 60px 0px 60px 110px;
+  font-family: "Courier New";
+  font-size: 11px;
 }
 #chatinput {
   padding: 10px;
+}
+
+.separation {
+  color: #444;
+}
+.mine .nick {
+  color: #ff0000;
 }
