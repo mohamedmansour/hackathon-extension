@@ -5,13 +5,15 @@ var chatinput = null;
 var notify = chrome.extension.getBackgroundPage().notificationClient;
 
 window.addEventListener('load', onLoad, false);
+window.addEventListener('resize', resizeSidebar, false);
 
 /**
  * Fired when Chat DOM has completely loaded.
  */
 function onLoad(e) {
-  chatlog = document.getElementById('chatlog');
-  nicklist = document.getElementById('nicklist');
+  resizeSidebar();
+  chatlog = document.querySelector('#chatlog ul');
+  nicklist = document.querySelector('#nicklist ul');
   chatinput = document.getElementById('chatinput');
   chatinput.onkeypress = onInputKeyPress;
   chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
@@ -42,6 +44,16 @@ function onLoad(e) {
   notify.send(JSON.stringify({
     command: NotificationCommand.NICKLIST
   }));
+  
+}
+
+/**
+ * Fluid layout.
+ */
+function resizeSidebar(){
+    var h = window.innerHeight - 130; 
+    document.getElementById('nicklist').style.height = h + 'px';
+    document.getElementById('chatlog').style.height = h + 'px';
 }
 
 /**
@@ -93,6 +105,7 @@ function onMessageReceived(msg) {
   }
   item.innerHTML = format(msg);
   chatlog.appendChild(item);
+  chatlog.parentNode.scrollTop = chatlog.parentNode.scrollHeight;
 }
 
 /**
