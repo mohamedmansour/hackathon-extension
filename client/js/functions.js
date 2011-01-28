@@ -12,15 +12,19 @@ function $(id) {
  * @param {string} url The url.
  */
 function openSingletonPage(url) {
-  var views = chrome.extension.getViews();
-  for (var v in views) {
-    var view = views[v];
-    if (view.location.href.indexOf(url) == 0) {
-      view.focus();
-      return;
-    }
-  }
-  chrome.tabs.create({url: url});
+  chrome.windows.getCurrent(function(win) {
+    chrome.tabs.getAllInWindow(win.id, function(tabs) {
+      // Check if the page is already open.
+      for (var i = 0; i < tabs.length; i++) {
+        // If the page exists, just select it.
+        if (tabs[i].url.indexOf(url) == 0) {
+          chrome.tabs.update(tabs[i].id, {selected: true});
+          return;
+        }
+      }
+      chrome.tabs.create({url: url});
+    });
+  });
 }
 
 /**
