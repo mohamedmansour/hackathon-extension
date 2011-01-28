@@ -1,0 +1,50 @@
+body {
+  font-size: 87%;
+  font-family: Helvetica, Arial, sans-serif;
+  margin: 10px;
+  min-width: 47em;
+}
+a {
+  color: blue;
+  font-size: 100%;
+}
+h1 {
+  background: url("/img/logo48.png") 0px 30px no-repeat;
+  display: inline;
+  margin: 0;
+  padding-bottom: 43px;
+  padding-left: 55px;
+  padding-top: 40px;
+  font-size: 150%;
+  font-weight: bold;
+}
+#header {
+  margin-bottom: 1.05em;
+  overflow: hidden;
+  padding-bottom: 1.5em;
+  padding-left: 0;
+  padding-top: 1.5em;
+  position: relative;
+}
+.extension-template {
+  border-bottom: 1px solid #cdcdcd;
+  margin: 10px 0;
+}
+.extension-header {
+  background: #ebeff9;
+  border-top: 1px solid #b5c7de;
+  font-size: 95%;
+  padding: 3px 5px;
+  font-weight: bold;
+}
+.extension-options {
+  background: #f4f6fc;
+  border-bottom: 1px solid #edeff5;
+  font-size: 85%;
+  padding: 0.8em 10px;
+}
+#credits {
+  font-size: 85%;
+  margin-top: 1em;
+  text-align: right;
+}
