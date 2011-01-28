@@ -36,7 +36,7 @@ NotificationClient.prototype.onServerClose_ = function() {
   });
   
   var notification = webkitNotifications.createNotification(
-    '/img/online.png',
+    '/img/logo.png',
     'Hackathon',
     'Server has disconnected.'
   );
