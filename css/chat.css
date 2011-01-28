@@ -80,8 +80,11 @@ h1 {
   color: #eee;
   font-family: "Courier New";
   font-size: 11px;
+  height: 100%;
 }
-
+#chatlog div {
+  height: 100%;
+}
 #chatinput {
   border-radius: 10px;
   width: 100%;
