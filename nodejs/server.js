@@ -104,7 +104,6 @@ NotificationServer.prototype.onDisconnect = function(conn) {
  */
 NotificationServer.prototype.onCleanup = function() {
   // Only keep the last 100 messages in the log. Dispose the rest.
-  syslog('Freeing up resources! Log size: ' + this.log_.length);
   if (this.log_.length > 100) {
     this.log_ = this.log_.slice(100);
   }
